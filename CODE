@@ -1,0 +1,327 @@
+#include <iostream>
+
+using namespace std;
+
+int opcja; // do wyboru czy sie konczy czy przechodzi do nastepnego wpisanie
+
+int x; // wiersze
+
+int y; // kolumny
+
+int macierz[100][100]; // deklaracja macierzy na ktorej sie operuje
+
+int macierzpomocnicza[100][100]; // deklaracja macierzy pomocniczej do zapisywania obliczen
+
+int Rozmiar_x; // ilosc wierszy w macierzy
+
+int Rozmiar_y; // ilosc kolumn w macierzy
+
+int numer_generacji; // liczba generacji od rozpoczecia symulacji
+
+int komurki_sasiadujace;
+
+int przeskok;
+
+
+
+void Podanie_Wielkosci_Macierzy()
+{
+	
+	cout << "Podaj wielkosc planszy (x y): " << endl;
+	        
+    cin >> Rozmiar_x >> Rozmiar_y;
+    
+    cout << "#--------------#" << endl;
+    
+    int macierz[Rozmiar_x][Rozmiar_y]; // deklaracja wielkosci macierzy na ktorej sie operuje
+    
+    int macierzpomocnicza[Rozmiar_x][Rozmiar_y]; // deklaracja wielkosci macierzy pomocniczej
+    
+}
+
+
+
+void Wypelnianie_Macierzy()
+{
+	x = 0;
+		
+	while (x < Rozmiar_x)
+	{
+		y = 0;
+		
+        while (y < Rozmiar_y) 
+		{
+            macierz[x][y] = 0;
+            
+            macierzpomocnicza[x][y] = 0;
+            
+            y++;
+        }
+        
+        x++;
+    }
+	
+}
+
+
+
+void Wypisanie_Macierzy()
+{
+	cout << "#-----------------#" << endl;
+	
+	cout << "Pokolenie numer: " << numer_generacji << endl;
+	
+	cout << "#";
+	
+	x = 0;
+	
+	while (x < Rozmiar_x*2-1)
+	{
+		cout << "-";
+		
+		x++;
+	}
+	
+	cout << "#" << endl;
+	
+	x = 0;
+	
+	while (x < Rozmiar_x) 
+	{
+		y = 0;
+		
+		cout << " ";
+		
+        while (y < Rozmiar_y) 
+		{
+            cout << macierz[x][y] << " ";
+            
+            y++;
+        }
+        
+        cout << endl;
+        
+        x++;
+    }
+    
+    cout << "#";
+	
+	x = 0;
+	
+	while (x < Rozmiar_x*2-1)
+	{
+		cout << "-";
+		
+		x++;
+	}
+	
+	cout << "#" << endl;
+}
+
+
+
+void Nowa_Generacja()
+{
+	
+	x = 0;
+	
+	while (x < Rozmiar_x)
+	{
+		y = 0;
+		
+        while (y < Rozmiar_y) 
+		{
+			komurki_sasiadujace = 0;
+			
+            if (macierz[x-1][y-1] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (macierz[x-1][y] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (macierz[x][y-1] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (macierz[x-1][y+1] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (macierz[x+1][y-1] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (macierz[x+1][y+1] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (macierz[x][y+1] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (macierz[x+1][y] == 1)
+            {
+            	komurki_sasiadujace++;
+			}
+			
+			if (komurki_sasiadujace < 2 || komurki_sasiadujace > 3)
+            {
+            	macierzpomocnicza[x][y] = 0;
+			}
+			
+			if (komurki_sasiadujace == 2 || komurki_sasiadujace == 3)
+			{
+				macierzpomocnicza[x][y] = 1;
+			}
+			
+            y++;
+        }
+        
+        x++;
+    }
+    
+    x = 0;
+		
+	while (x < Rozmiar_x)
+	{
+		y = 0;
+		
+        while (y < Rozmiar_y) 
+		{
+            macierz[x][y] = macierzpomocnicza[x][y]; 
+            
+            y++;
+        }
+        
+        x++;
+    }
+	
+}
+
+
+
+void Dzialanie()
+{
+	
+	Wypelnianie_Macierzy();
+	
+    do {
+        cout << "podaj opcje (4 - przeskoczenie, 3 - nastepne pokolenie, 2 - zakoncz, 1 - wpisywanie, 0 - wyswietl)" << endl;
+        
+        cin >> opcja;
+        
+        cout << endl;
+
+        if (opcja == 1)
+        {
+            cout << "Podaj pozycje (x y): ";
+            
+            cin >> x >> y;
+            
+            cout << endl;
+
+            if (x >= Rozmiar_x || x < 0 || y >= Rozmiar_y || y < 0)
+            {
+                cout << "Niepoprawne dane pozycji" << endl;
+            }
+            
+            else // jerzeli wybrana liczba jest rowna 0 to zamieni sie na 1, a jak jest rowna 1 to zamieni sie na 0
+            {
+            	if (macierz[x][y] == 0)
+            	{
+            		macierz[x][y] = 1;
+				}
+				
+                else
+                {
+                	macierz[x][y] = 0;
+				}
+            }
+        }
+        
+        else if (opcja == 0) // przy opcji 0 konsola wypisuje macierz
+        {
+            
+            Wypisanie_Macierzy();
+            
+            opcja = 1;
+        }
+        
+        else if (opcja == 2) // przy woborze 2 program wychodzi z petli i sie konczy
+        {
+        	
+        	Wypisanie_Macierzy();
+        	
+        	cout << "Program zakonczony." << endl << endl;
+		}
+		
+		else if (opcja == 3)
+		{
+			Nowa_Generacja();
+			
+			Wypisanie_Macierzy();
+			
+			opcja = 1;
+			
+			numer_generacji++;
+		}
+		
+		else if (opcja == 4)
+		{
+			cout << "Podaj o ile generacji chcesz przeskoczyc: ";
+			
+			cin >> przeskok;
+			
+			cout << endl;
+			
+			do
+			{
+				
+				Nowa_Generacja();
+				
+				numer_generacji++;
+				
+				przeskok--;
+				
+			}while (przeskok != 0);
+			
+			opcja = 1;
+    	}
+        
+        else
+        {
+            cout << "Niepoprawna opcja" << endl;
+            
+            opcja = 1;
+        }
+
+    } while (opcja == 1);
+}
+
+
+
+
+
+
+
+
+
+int main() 
+{
+	numer_generacji = 0;
+        
+	Podanie_Wielkosci_Macierzy();
+		
+	Dzialanie();
+
+    return 0;
+}
